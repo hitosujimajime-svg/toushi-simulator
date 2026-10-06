@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>もしも投資シミュレーター</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>もしも投資シミュレーター</h1>
+  <p>過去にこの銘柄を買っていたら、今いくらになっていたか?</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>1. 銘柄を追加</h2>
+    <div class="search">
+      <input id="q" type="text" placeholder="ティッカー・コード (例: 7203 / AAPL / VOO / toyota)" autocomplete="off">
+      <button id="searchBtn" type="button">検索</button>
+    </div>
+    <ul id="results" class="results"></ul>
+    <p class="hint">日本株は4桁コード(7203 → 7203.T)、米国株・ETFはティッカーで検索できます。日本語の銘柄名検索は非対応です。</p>
+
+    <h3>投資信託</h3>
+    <div class="search">
+      <select id="fundSel"></select>
+    </div>
+    <details>
+      <summary>その他の投資信託を追加(ISIN + 協会コード)</summary>
+      <p class="hint">コードは<a href="https://toushin-lib.fwg.ne.jp/" target="_blank" rel="noopener">投信総合検索ライブラリー</a>のファンドページで確認できます。基準価額は分配金を含まない値です。</p>
+      <div class="grid">
+        <input id="fundName" type="text" placeholder="ファンド名(任意)">
+        <input id="fundIsin" type="text" placeholder="ISINコード 12桁">
+        <input id="fundCode" type="text" placeholder="協会コード 8桁">
+        <button id="fundAdd" type="button">追加</button>
+      </div>
+    </details>
+
+    <table id="holdings">
+      <thead><tr><th>銘柄</th><th>通貨</th><th>金額(円)</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="emptyMsg" class="hint">銘柄が未追加です。</p>
+  </section>
+
+  <section class="card">
+    <h2>2. 条件を設定</h2>
+    <div class="grid">
+      <label>購入方法
+        <select id="mode">
+          <option value="lump">一括購入(最初に一度だけ)</option>
+          <option value="dca">毎月積立</option>
+        </select>
+      </label>
+      <label>開始日
+        <input id="start" type="date">
+      </label>
+      <label id="dayWrap">積立日(毎月)
+        <input id="day" type="number" min="1" max="28" value="1">
+      </label>
+      <label class="check">
+        <input id="div" type="checkbox" checked> 配当・分配金を再投資(トータルリターン)
+      </label>
+    </div>
+    <p class="hint" id="amountHint">金額は「一括購入なら総額、積立なら毎月の額」です。米国株は購入日の USD/JPY レートで円換算します。</p>
+    <button id="run" type="button" class="primary">シミュレーション実行</button>
+    <p id="status" class="status"></p>
+  </section>
+
+  <section id="out" class="card" hidden>
+    <h2>3. 結果</h2>
+    <div class="summary" id="summary"></div>
+    <div class="chartbox"><canvas id="chart"></canvas></div>
+    <table id="detail">
+      <thead><tr><th>銘柄</th><th>投資額</th><th>評価額</th><th>損益</th><th>損益率</th><th>年率(XIRR)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="hint">株価は Yahoo Finance の過去データです。手数料・税金・為替手数料は考慮していません。投資判断の助言ではなく、過去実績の試算です。</p>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

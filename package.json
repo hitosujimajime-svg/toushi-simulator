@@ -1,0 +1,8 @@
+{
+  "name": "toushi-simulator",
+  "version": "1.0.0",
+  "description": "過去に買っていたらいくらになっていたか?シミュレーター",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "private": true
+}
