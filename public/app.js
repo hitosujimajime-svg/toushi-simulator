@@ -245,6 +245,13 @@ async function run() {
         events.push({ date: d, amount: h.amount, shares: h.amount / (s.prices[k] * fx) });
       }
       if (!events.length) throw new Error(`${h.symbol}: 開始日以降に購入可能な日がありません`);
+      for (let k = 1; k < s.prices.length; k++) {
+        const ratio = s.prices[k] / s.prices[k - 1];
+        if (s.dates[k] > start && (ratio < 0.4 || ratio > 2.5)) {
+          warnings.push(`⚠ ${h.name}: ${s.dates[k]} に株価が前日比 ${ratio.toFixed(2)} 倍と急変しています。株式分割などがデータに未反映の可能性があり、結果が不正確かもしれません。`);
+          break;
+        }
+      }
       if (events[0].date > addDays(start, 10)) warnings.push(`${h.name} は ${events[0].date} からのデータのため、その日から購入したものとして計算しました。`);
       results.push({ h, s, events });
     });
